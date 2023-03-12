@@ -56,7 +56,11 @@ class ChargePoint(cp):
         # Do something with the status notification
         # For example, you can log the current status of the charging session
         logger.info("Received StatusNotification: "+str(kwargs))
-        return call('StatusNotification', {'status': 'Accepted'})
+        return call.StatusNotificationPayload(
+            status='Accepted',
+            timestamp=datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z",
+            info="test Info"
+        )
     @on(Action.Authorize)
     def on_authorize(self, **kwargs):
         print('Received Authorize:')
