@@ -40,6 +40,13 @@ class ChargePoint(cp):
             interval=10,
             status=RegistrationStatus.accepted,
         )
+    @on("Heartbeat")
+    def on_heartbeat(self):
+        print("Got a Heartbeat!")
+        logger.info("Got a Heartbeat!")
+        return call_result.HeartbeatPayload(
+            current_time=datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z"
+        )
 
 
 async def on_connect(websocket, path):
