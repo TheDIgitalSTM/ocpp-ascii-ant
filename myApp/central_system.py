@@ -17,7 +17,8 @@ except ModuleNotFoundError:
 
 from ocpp.routing import on
 from ocpp.v16 import ChargePoint as cp
-from ocpp.v16 import call_result, call
+from ocpp.v16 import call_result
+from ocpp.v16.call import call
 from ocpp.v16.enums import Action, RegistrationStatus
 
 # logging.basicConfig(level=logging.DEBUG)
@@ -64,13 +65,15 @@ class ChargePoint(cp):
         # Check if the user is authorized to start a charging session
         logger.info("Received Authorize: "+str(kwargs))
 
-        if kwargs['id_tag'] == 'myrfidtag':
+        if kwargs['id_tag'] == 'F698DABC':
+            print("You are authorized to charge")
             return call_result.AuthorizePayload(
                 id_tag_info={
                     'status': 'Accepted'
                 }
             )
         else:
+            print("You are not authorized to charge")
             return call_result.AuthorizePayload(
                 id_tag_info={
                     'status': 'Invalid'
