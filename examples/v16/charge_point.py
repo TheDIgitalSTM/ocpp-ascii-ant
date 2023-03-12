@@ -17,7 +17,7 @@ from ocpp.v16 import ChargePoint as cp
 from ocpp.v16 import call
 from ocpp.v16.enums import RegistrationStatus
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 
 class ChargePoint(cp):
@@ -34,7 +34,7 @@ class ChargePoint(cp):
 
 async def main():
     async with websockets.connect(
-        "ws://localhost:9000/CP_1", subprotocols=["ocpp1.6"]
+        "ws://159.89.208.137:9000", subprotocols=["ocpp1.6"]
     ) as ws:
 
         cp = ChargePoint("CP_1", ws)

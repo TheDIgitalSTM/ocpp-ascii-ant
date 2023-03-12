@@ -54,7 +54,7 @@ class ChargePoint(cp):
 
         # Do something with the status notification
         # For example, you can log the current status of the charging session
-        logger.info("Received StatusNotification:"+kwargs)
+        logger.info("Received StatusNotification: "+str(kwargs))
         return call('StatusNotification', {'status': 'Accepted'})
     @on(Action.Authorize)
     def on_authorize(self, **kwargs):
@@ -62,7 +62,7 @@ class ChargePoint(cp):
         print(kwargs)
 
         # Check if the user is authorized to start a charging session
-        logger.info("Received Authorize:"+kwargs)
+        logger.info("Received Authorize: "+str(kwargs))
 
         if kwargs['id_tag'] == 'myrfidtag':
             return call_result.AuthorizePayload(
