@@ -57,10 +57,34 @@ class ChargePoint(cp):
         # For example, you can log the current status of the charging session
         logger.info("Received StatusNotification: "+str(kwargs))
         return call.StatusNotificationPayload(
-            status='Accepted',
+            connector_id=kwargs['connector_id'],
+            error_code=kwargs['error_code'],
+            status=kwargs['Available'],
             timestamp=datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z",
             info="test Info"
         )
+    @on(Action.MeterValues)
+    def on_meter_values(self, **kwargs):
+        print('Received MeterValues:')
+        print(kwargs)
+        logger.info("Received MeterValues: "+str(kwargs))
+
+        if 'MeterValues' in kwargs:
+            # Do something with the meter values
+            # For example, you can log the current meter values
+            return call_result.MeterValuesPayload(
+                connector_id=kwargs['connector_id'],
+                transaction_id=kwargs.get('transaction_id', None),
+                meter_value=[{
+                    'timestamp': kwargs['MeterValues'][0]['timestamp'],
+                    'sampled_value': kwargs['MeterValues'][0]['sampledValue']
+                }]
+            )
+        else:
+            # Handle the case where the MeterValues key is missing from the payload
+            return call_result.GenericPayload(
+                error='Missing MeterValues key in payload'
+            )
     @on(Action.Authorize)
     def on_authorize(self, **kwargs):
         print('Received Authorize:')
