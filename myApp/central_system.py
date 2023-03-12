@@ -93,11 +93,34 @@ class ChargePoint(cp):
 
         if kwargs['id_tag'] == 'F698DABC':
             print("You are authorized to charge")
-            return call_result.AuthorizePayload(
-                id_tag_info={
-                    'status': 'Accepted'
-                }
+
+            # return call_result.AuthorizePayload(
+            #     id_tag_info={
+            #         'status': 'Accepted'
+            #     }
+            # )
+            
+            # Start a charging session using the RemoteStartTransaction request
+            start_response = self.call(
+                call.RemoteStartTransactionPayload(
+                    connector_id=1, # Replace with the connector ID you want to use
+                    id_tag=kwargs['id_tag']
+                )
             )
+
+            # Check if the charging session was successfully started
+            if isinstance(start_response, call_result.RemoteStartTransactionResult):
+                return call_result.AuthorizePayload(
+                    id_tag_info={
+                        'status': 'Accepted'
+                    }
+                )
+            else:
+                return call_result.AuthorizePayload(
+                    id_tag_info={
+                        'status': 'Invalid'
+                    }
+                )
         else:
             print("You are not authorized to charge")
             return call_result.AuthorizePayload(
