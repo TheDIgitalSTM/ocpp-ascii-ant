@@ -99,7 +99,7 @@ class ChargePoint(cp):
             #         'status': 'Accepted'
             #     }
             # )
-            
+
             # Start a charging session using the RemoteStartTransaction request
             start_response = self.call(
                 call.RemoteStartTransactionPayload(
@@ -109,7 +109,7 @@ class ChargePoint(cp):
             )
 
             # Check if the charging session was successfully started
-            if isinstance(start_response, call_result.RemoteStartTransactionResult):
+            if isinstance(start_response, call.RemoteStartTransactionResult):
                 return call_result.AuthorizePayload(
                     id_tag_info={
                         'status': 'Accepted'
