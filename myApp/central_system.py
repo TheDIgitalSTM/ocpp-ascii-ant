@@ -47,6 +47,12 @@ class ChargePoint(cp):
         return call_result.HeartbeatPayload(
             current_time=datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z"
         )
+    @on(Action.StatusNotification)
+    def on_status_notification(self, notification):
+        print ("Status notification")
+        logger.info("Status notification")
+        return call_result.StatusNotificationPayload(
+        )
 
 
 async def on_connect(websocket, path):
