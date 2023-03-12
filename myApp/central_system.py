@@ -59,7 +59,7 @@ class ChargePoint(cp):
         return call.StatusNotificationPayload(
             connector_id=kwargs['connector_id'],
             error_code=kwargs['error_code'],
-            status=kwargs['Available'],
+            status=kwargs['status'],
             timestamp=datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z",
             info="test Info"
         )
