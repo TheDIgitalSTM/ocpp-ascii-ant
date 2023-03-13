@@ -15,6 +15,7 @@ except ModuleNotFoundError:
     sys.exit(1)
 
 from ocpp.routing import on
+from ocpp.routing import after
 from ocpp.v16 import ChargePoint as cp
 from ocpp.v16 import call_result
 from ocpp.v16 import call
@@ -67,99 +68,99 @@ class ChargePoint(cp):
             # status=kwargs['status']
         )
     
-        id_tag = kwargs['id_tag']
-        connector_id = kwargs['connector_id']
-    # Check if the ID tag is valid
-        if id_tag == "123456":
-            # If the ID tag is valid, start the transaction
-            transaction_id = 1
-            start_time = datetime.utcnow().isoformat() + "Z"
-            registration_status = RegistrationStatus.accepted
-            id_token_info = {
-                "status": AuthorizationStatus.accepted,
-                "expiryDate": "2022-02-24T23:59:59.000Z",
-                "parentIdTag": None,
-                "groupIds": None
-            }
+    #     id_tag = kwargs['id_tag']
+    #     connector_id = kwargs['connector_id']
+    # # Check if the ID tag is valid
+    #     if id_tag == "123456":
+    #         # If the ID tag is valid, start the transaction
+    #         transaction_id = 1
+    #         start_time = datetime.utcnow().isoformat() + "Z"
+    #         registration_status = RegistrationStatus.accepted
+    #         id_token_info = {
+    #             "status": AuthorizationStatus.accepted,
+    #             "expiryDate": "2022-02-24T23:59:59.000Z",
+    #             "parentIdTag": None,
+    #             "groupIds": None
+    #         }
             
-            # Update the state of the charging point to reflect the started transaction
-            self.transaction_id = transaction_id
-            self.connector_status[connector_id] = ChargePointStatus.charging
-            self.meter_start[connector_id] = self.current_meter_value()
-            self.current_transaction_id[connector_id] = transaction_id
+    #         # Update the state of the charging point to reflect the started transaction
+    #         self.transaction_id = transaction_id
+    #         self.connector_status[connector_id] = ChargePointStatus.charging
+    #         self.meter_start[connector_id] = self.current_meter_value()
+    #         self.current_transaction_id[connector_id] = transaction_id
             
-            # Send a StatusNotification to the central system to indicate that charging has started
-            status_notification_payload = {
-                "connectorId": connector_id,
-                "status": ChargePointStatus.charging,
-                "errorCode": ChargePointErrorCode.noError,
-                "info": None,
-                "timestamp": datetime.utcnow().isoformat() + "Z",
-                "vendorId": "my_vendor_id",
-                "vendorErrorCode": None,
-                "meterValue": [{
-                    "timestamp": start_time,
-                    "sampledValue": [{
-                        "value": self.meter_start[connector_id],
-                        "context": "Sample.Periodic",
-                        "format": "Raw",
-                        "measurand": "Energy.Active.Import.Register",
-                        "location": None,
-                        "unit": "Wh"
-                    }]
-                }]
-            }
+    #         # Send a StatusNotification to the central system to indicate that charging has started
+    #         status_notification_payload = {
+    #             "connectorId": connector_id,
+    #             "status": ChargePointStatus.charging,
+    #             "errorCode": ChargePointErrorCode.noError,
+    #             "info": None,
+    #             "timestamp": datetime.utcnow().isoformat() + "Z",
+    #             "vendorId": "my_vendor_id",
+    #             "vendorErrorCode": None,
+    #             "meterValue": [{
+    #                 "timestamp": start_time,
+    #                 "sampledValue": [{
+    #                     "value": self.meter_start[connector_id],
+    #                     "context": "Sample.Periodic",
+    #                     "format": "Raw",
+    #                     "measurand": "Energy.Active.Import.Register",
+    #                     "location": None,
+    #                     "unit": "Wh"
+    #                 }]
+    #             }]
+    #         }
             
-            self.call_result("StatusNotification", status_notification_payload)
+    #         self.call_result("StatusNotification", status_notification_payload)
             
-            # Return a StartTransactionPayload with the transaction ID and other information
-            return {
-                "transactionId": transaction_id,
-                "idTagInfo": {
-                    "status": registration_status,
-                    "expiryDate": None,
-                    "parentIdTag": None,
-                    "idToken": {
-                        "idToken": id_tag,
-                        "type": IdTokenType.rfid
-                    },
-                    "groupIds": None,
-                    "expiryReason": None,
-                    "transactionId": transaction_id,
-                    "id": None,
-                    "location": None,
-                    "language1": None,
-                    "language2": None
-                },
-                "timestamp": start_time,
-                "id": None,
-                "meterStart": self.meter_start[connector_id],
-                "reservationId": None,
-                "status": registration_status
-            }
-        else:
-            # If the ID tag is not valid, reject the transaction
-            registration_status = RegistrationStatus.invalid
-            id_token_info = {
-                "status": AuthorizationStatus.invalid,
-                "expiryDate": None,
-                "parentIdTag": None,
-                "groupIds": None
-            }
+    #         # Return a StartTransactionPayload with the transaction ID and other information
+    #         return {
+    #             "transactionId": transaction_id,
+    #             "idTagInfo": {
+    #                 "status": registration_status,
+    #                 "expiryDate": None,
+    #                 "parentIdTag": None,
+    #                 "idToken": {
+    #                     "idToken": id_tag,
+    #                     "type": IdTokenType.rfid
+    #                 },
+    #                 "groupIds": None,
+    #                 "expiryReason": None,
+    #                 "transactionId": transaction_id,
+    #                 "id": None,
+    #                 "location": None,
+    #                 "language1": None,
+    #                 "language2": None
+    #             },
+    #             "timestamp": start_time,
+    #             "id": None,
+    #             "meterStart": self.meter_start[connector_id],
+    #             "reservationId": None,
+    #             "status": registration_status
+    #         }
+    #     else:
+    #         # If the ID tag is not valid, reject the transaction
+    #         registration_status = RegistrationStatus.invalid
+    #         id_token_info = {
+    #             "status": AuthorizationStatus.invalid,
+    #             "expiryDate": None,
+    #             "parentIdTag": None,
+    #             "groupIds": None
+    #         }
             
-            # Return a StartTransactionPayload with the registration status and ID token information
-            return {
-                "transactionId": None,
-                "idTagInfo": {
-                    "status": registration_status,
-                    "expiryDate": None,
-                    "parentIdTag": None,
-                    "idToken": {
-                        "idToken": id_tag,
-                        "type": IdTokenType.rf
-                    }
-                }
-            }
+    #         # Return a StartTransactionPayload with the registration status and ID token information
+    #         return {
+    #             "transactionId": None,
+    #             "idTagInfo": {
+    #                 "status": registration_status,
+    #                 "expiryDate": None,
+    #                 "parentIdTag": None,
+    #                 "idToken": {
+    #                     "idToken": id_tag,
+    #                     "type": IdTokenType.rf
+    #                 }
+    #             }
+    #         }
     @on(Action.MeterValues)
     def on_meter_values(self, **kwargs):
         print('Received MeterValues:')
@@ -185,6 +186,7 @@ class ChargePoint(cp):
             return call_result.MeterValuesPayload()
     @on(Action.Authorize)
     def on_authorize(self, **kwargs):
+        
         print('Received Authorize:')
         print(kwargs)
 
@@ -195,39 +197,39 @@ class ChargePoint(cp):
             print("You are authorized to charge")
             # Define the values for the charging profile
             # charging_rate_unit = ChargingRateUnitType.A
-            charging_profile_purpose = ChargingProfilePurposeType("TxProfile")
-            stack_level = 1
-            charging_profile_kind = ChargingProfileKindType("Absolute")
-            # charging_profile_status = ChargingProfileStatus.Accepted
-            # charging_schedule_period_start = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-            charging_schedule_period_start = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z"
-            # charging_schedule_period_duration = 60  # in minutes
-            charging_schedule_period_limit = 1000  # in Wh
-            charging_schedule = [
-                {
-                    'startPeriod': charging_schedule_period_start,
-                    'limit': charging_schedule_period_limit
-                }
-            ]
-            start_response =  call.RemoteStartTransactionPayload(
-                    connector_id=1, # Replace with the connector ID you want to use
-                    id_tag=kwargs['id_tag'],
-                    charging_profile={
-                        'chargingProfileId': '1',
-                        'transactionId': 1234,
-                        'stackLevel': stack_level,
-                        'chargingProfilePurpose': charging_profile_purpose,
-                        'chargingProfileKind': charging_profile_kind,
-                        'chargingSchedule': charging_schedule,
-                        'recurrencyKind': 0
-                    }
-                )
+            # charging_profile_purpose = ChargingProfilePurposeType("TxProfile")
+            # stack_level = 1
+            # charging_profile_kind = ChargingProfileKindType("Absolute")
+            # # charging_profile_status = ChargingProfileStatus.Accepted
+            # # charging_schedule_period_start = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            # charging_schedule_period_start = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z"
+            # # charging_schedule_period_duration = 60  # in minutes
+            # charging_schedule_period_limit = 1000  # in Wh
+            # charging_schedule = [
+            #     {
+            #         'startPeriod': charging_schedule_period_start,
+            #         'limit': charging_schedule_period_limit
+            #     }
+            # ]
+            # start_response =  call.RemoteStartTransactionPayload(
+            #         connector_id=1, # Replace with the connector ID you want to use
+            #         id_tag=kwargs['id_tag'],
+            #         charging_profile={
+            #             'chargingProfileId': '1',
+            #             'transactionId': 1234,
+            #             'stackLevel': stack_level,
+            #             'chargingProfilePurpose': charging_profile_purpose,
+            #             'chargingProfileKind': charging_profile_kind,
+            #             'chargingSchedule': charging_schedule,
+            #             'recurrencyKind': 0
+            #         }
+            #     )
             
-            print("start charge response")
-            print(start_response)
+            # print("start charge response")
+            # print(start_response)
 
-            logger.info("start charge response")
-            logger.info(start_response)
+            # logger.info("start charge response")
+            # logger.info(start_response)
 
             return call_result.AuthorizePayload(
                 id_tag_info={
@@ -243,6 +245,43 @@ class ChargePoint(cp):
                 }
             )
 
+    @after(Action.Authorize)
+    def after_authorize(self):
+        print("After authorize order ")
+        charging_profile_purpose = ChargingProfilePurposeType("TxProfile")
+        stack_level = 1
+        charging_profile_kind = ChargingProfileKindType("Absolute")
+        # charging_profile_status = ChargingProfileStatus.Accepted
+        # charging_schedule_period_start = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        charging_schedule_period_start = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z"
+        # charging_schedule_period_duration = 60  # in minutes
+        charging_schedule_period_limit = 1000  # in Wh
+        charging_schedule = [
+            {
+                'startPeriod': charging_schedule_period_start,
+                'limit': charging_schedule_period_limit
+            }
+        ]
+        start_response =  call.RemoteStartTransactionPayload(
+                connector_id=1, # Replace with the connector ID you want to use
+                id_tag='F698DABC',
+                charging_profile={
+                    'chargingProfileId': '1',
+                    'transactionId': 1234,
+                    'stackLevel': stack_level,
+                    'chargingProfilePurpose': charging_profile_purpose,
+                    'chargingProfileKind': charging_profile_kind,
+                    'chargingSchedule': charging_schedule,
+                    'recurrencyKind': 0
+                }
+            )
+        
+        print("start charge response")
+        print(start_response)
+
+        logger.info("start charge response")
+        logger.info(start_response)
+        
     @on(Action.StartTransaction)
     def on_start_transaction(self, **kwargs):
         print('Received on start transaction:')
