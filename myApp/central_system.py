@@ -163,12 +163,12 @@ class ChargePoint(cp):
             # Do something with the meter values
             # For example, you can log the current meter values
             return call_result.MeterValuesPayload(
-                connector_id=kwargs['connector_id'],
-                transaction_id=kwargs.get('transaction_id', None),
-                meter_value=[{
-                    'timestamp': kwargs['MeterValues'][0]['timestamp'],
-                    'sampled_value': kwargs['MeterValues'][0]['sampledValue']
-                }]
+                # connector_id=kwargs['connector_id'],
+                # transaction_id=kwargs.get('transaction_id', None),
+                # meter_value=[{
+                #     'timestamp': kwargs['MeterValues'][0]['timestamp'],
+                #     'sampled_value': kwargs['MeterValues'][0]['sampledValue']
+                # }]
             )
         else:
             # Handle the case where the MeterValues key is missing from the payload
