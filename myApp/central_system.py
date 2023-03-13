@@ -246,7 +246,7 @@ class ChargePoint(cp):
             )
 
     @after(Action.Authorize)
-    def after_authorize(self):
+    def after_authorize(self,  **kwargs):
         print("After authorize order ")
         charging_profile_purpose = ChargingProfilePurposeType("TxProfile")
         stack_level = 1
@@ -264,7 +264,7 @@ class ChargePoint(cp):
         ]
         start_response =  call.RemoteStartTransactionPayload(
                 connector_id=1, # Replace with the connector ID you want to use
-                id_tag='F698DABC',
+                id_tag= kwargs['id_tag'],
                 charging_profile={
                     'chargingProfileId': '1',
                     'transactionId': 1234,
