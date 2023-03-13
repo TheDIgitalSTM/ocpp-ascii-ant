@@ -17,6 +17,7 @@ except ModuleNotFoundError:
 from ocpp.routing import on
 from ocpp.v16 import ChargePoint as cp
 from ocpp.v16 import call_result
+from ocpp.v16 import call
 from ocpp.v16.enums import Action, RegistrationStatus, ChargePointStatus, AuthorizationStatus, ChargePointErrorCode
 
 
@@ -187,12 +188,19 @@ class ChargePoint(cp):
 
         if kwargs['id_tag'] == 'F698DABC':
             print("You are authorized to charge")
+            start_response = self.call(
+                call.RemoteStartTransactionPayload(
+                    connector_id=1, # Replace with the connector ID you want to use
+                    id_tag=kwargs['id_tag']
+                )
+            )
 
             return call_result.AuthorizePayload(
                 id_tag_info={
                     'status': 'Accepted'
                 }
             )
+            
         else:
             print("You are not authorized to charge")
             return call_result.AuthorizePayload(
@@ -208,9 +216,11 @@ class ChargePoint(cp):
         # Do something with the status notification
         # For example, you can log the current status of the charging session
         logger.info("Received StatusNotification: "+str(kwargs))
+        # expire_date datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z"
         return call_result.StartTransactionPayload(
             transaction_id=1,
-            idTagInfo={"status": RegistrationStatus.accepted}
+            idTagInfo={"status": RegistrationStatus.accepted
+                       }
         )
     @on(Action.StopTransaction)
     def on_stop_transaction(self, **kwargs):
