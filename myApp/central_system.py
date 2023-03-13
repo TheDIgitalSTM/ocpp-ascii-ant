@@ -194,13 +194,13 @@ class ChargePoint(cp):
         if kwargs['id_tag'] == 'F698DABC':
             print("You are authorized to charge")
             # Define the values for the charging profile
-            charging_rate_unit = ChargingRateUnitType.A
+            # charging_rate_unit = ChargingRateUnitType.A
             charging_profile_purpose = ChargingProfilePurposeType.TxProfile
             stack_level = 1
             charging_profile_kind = ChargingProfileKindType.Absolute
-            charging_profile_status = ChargingProfileStatus.Accepted
+            # charging_profile_status = ChargingProfileStatus.Accepted
             charging_schedule_period_start = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-            charging_schedule_period_duration = 60  # in minutes
+            # charging_schedule_period_duration = 60  # in minutes
             charging_schedule_period_limit = 1000  # in Wh
             charging_schedule = [
                 {
