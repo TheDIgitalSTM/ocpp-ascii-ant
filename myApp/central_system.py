@@ -57,10 +57,13 @@ class ChargePoint(cp):
         # For example, you can log the current status of the charging session
         logger.info("Received StatusNotification: "+str(kwargs))
         return call.StatusNotificationPayload(
-            # connector_id=kwargs['connector_id'],
-            # error_code=kwargs['error_code'],
-            # status=kwargs['status']
+            connectorId=kwargs['connector_id'],
+            errorCode=kwargs['error_code'],
+            status=kwargs['status']
         )
+    @on(Action.StartTransaction)
+    def on_start_transaction(self, **kwargs):
+        pass
     @on(Action.MeterValues)
     def on_meter_values(self, **kwargs):
         print('Received MeterValues:')
