@@ -25,7 +25,7 @@ from ocpp.v16.enums import Action, RegistrationStatus, ChargePointStatus, Author
 handler = LogtailHandler(source_token="BSXaSs6o9fZqsAJnrzecWd7n")
 logger = logging.getLogger(__name__)
 logger.handlers = []
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 
 
