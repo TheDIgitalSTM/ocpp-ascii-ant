@@ -253,7 +253,7 @@ class ChargePoint(cp):
         # expire_date datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z"
         return call_result.StartTransactionPayload(
             transaction_id=1,
-            idTagInfo={"status": RegistrationStatus.accepted
+            id_tag_info={"status": RegistrationStatus.accepted
                        }
         )
     @on(Action.StopTransaction)
@@ -263,7 +263,7 @@ class ChargePoint(cp):
 
         logger.info("Received stop transaction: "+ str(kwargs))
         return call_result.StopTransactionPayload(
-            idTagInfo={"status": RegistrationStatus.accepted}
+            id_tag_info={"status": RegistrationStatus.accepted}
         )
 
 async def on_connect(websocket, path):
