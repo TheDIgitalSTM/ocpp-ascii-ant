@@ -47,7 +47,7 @@ class ChargePoint(cp):
             current_time=datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z"
         )
     @on(Action.StatusNotification)
-    def on_status_notification(self, **kwargs)-> call_result.StatusNotificationResult:
+    def on_status_notification(self, **kwargs):
         print('Received StatusNotification:')
         print(kwargs)
 
