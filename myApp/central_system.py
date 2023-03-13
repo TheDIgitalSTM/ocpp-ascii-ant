@@ -57,7 +57,7 @@ class ChargePoint(cp):
         return call_result.StatusNotificationPayload(
             # connectorId=kwargs['connector_id'],
             # errorCode=kwargs['error_code'],
-            status=kwargs['status']
+            # status=kwargs['status']
         )
     
         id_tag = kwargs['id_tag']
