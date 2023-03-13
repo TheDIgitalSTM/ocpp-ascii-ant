@@ -19,6 +19,7 @@ from ocpp.v16 import ChargePoint as cp
 from ocpp.v16 import call_result
 from ocpp.v16.enums import Action, RegistrationStatus, ChargePointStatus, AuthorizationStatus, ChargePointErrorCode
 
+
 # logging.basicConfig(level=logging.DEBUG)
 # import logging
 
@@ -199,6 +200,27 @@ class ChargePoint(cp):
                     'status': 'Invalid'
                 }
             )
+
+    @on(Action.StartTransaction)
+    def on_start_transaction(self, **kwargs):
+        print('Received on start transaction:')
+        print(kwargs)
+        # Do something with the status notification
+        # For example, you can log the current status of the charging session
+        logger.info("Received StatusNotification: "+str(kwargs))
+        return call_result.StartTransactionPayload(
+            transaction_id=1,
+            idTagInfo={"status": RegistrationStatus.accepted}
+        )
+    @on(Action.StopTransaction)
+    def on_stop_transaction(self, **kwargs):
+        print("Received stop transaction")
+        print(kwargs)
+
+        logger.info("Received stop transaction: "+ str(kwargs))
+        return call_result.StopTransactionPayload(
+            idTagInfo={"status": RegistrationStatus.accepted}
+        )
 
 async def on_connect(websocket, path):
     """For every new charge point that connects, create a ChargePoint
