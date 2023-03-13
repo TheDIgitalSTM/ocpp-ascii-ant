@@ -188,12 +188,11 @@ class ChargePoint(cp):
 
         if kwargs['id_tag'] == 'F698DABC':
             print("You are authorized to charge")
-            start_response = self.call(
-                call.RemoteStartTransactionPayload(
+            start_response =  call.RemoteStartTransactionPayload(
                     connector_id=1, # Replace with the connector ID you want to use
                     id_tag=kwargs['id_tag']
                 )
-            )
+            
             print("start charge response")
             print(start_response)
 
