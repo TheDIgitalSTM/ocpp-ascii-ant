@@ -199,7 +199,8 @@ class ChargePoint(cp):
             stack_level = 1
             charging_profile_kind = ChargingProfileKindType("Absolute")
             # charging_profile_status = ChargingProfileStatus.Accepted
-            charging_schedule_period_start = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            # charging_schedule_period_start = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            charging_schedule_period_start = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S") + "Z"
             # charging_schedule_period_duration = 60  # in minutes
             charging_schedule_period_limit = 1000  # in Wh
             charging_schedule = [
