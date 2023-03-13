@@ -172,9 +172,10 @@ class ChargePoint(cp):
             )
         else:
             # Handle the case where the MeterValues key is missing from the payload
-            return call_result.GenericPayload(
-                error='Missing MeterValues key in payload'
-            )
+            # return call_result.GenericPayload(
+            #     error='Missing MeterValues key in payload'
+            # )
+            return call_result.MeterValuesPayload()
     @on(Action.Authorize)
     def on_authorize(self, **kwargs):
         print('Received Authorize:')
