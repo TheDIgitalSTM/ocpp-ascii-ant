@@ -194,6 +194,11 @@ class ChargePoint(cp):
                     id_tag=kwargs['id_tag']
                 )
             )
+            print("start charge response")
+            print(start_response)
+
+            logger.info("start charge response")
+            logger.info(start_response)
 
             return call_result.AuthorizePayload(
                 id_tag_info={
