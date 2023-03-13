@@ -19,6 +19,11 @@ from ocpp.v16 import ChargePoint as cp
 from ocpp.v16 import call_result
 from ocpp.v16 import call
 from ocpp.v16.enums import Action, RegistrationStatus, ChargePointStatus, AuthorizationStatus, ChargePointErrorCode
+from ocpp.v16.enums import ChargingProfilePurposeType
+from ocpp.v16.enums import ChargingRateUnitType
+from ocpp.v16.enums import ChargingProfileKindType
+from ocpp.v16.enums import ChargingProfileStatus
+
 
 
 # logging.basicConfig(level=logging.DEBUG)
@@ -188,9 +193,33 @@ class ChargePoint(cp):
 
         if kwargs['id_tag'] == 'F698DABC':
             print("You are authorized to charge")
+            # Define the values for the charging profile
+            charging_rate_unit = ChargingRateUnitType.A
+            charging_profile_purpose = ChargingProfilePurposeType.TxProfile
+            stack_level = 1
+            charging_profile_kind = ChargingProfileKindType.Absolute
+            charging_profile_status = ChargingProfileStatus.Accepted
+            charging_schedule_period_start = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            charging_schedule_period_duration = 60  # in minutes
+            charging_schedule_period_limit = 1000  # in Wh
+            charging_schedule = [
+                {
+                    'startPeriod': charging_schedule_period_start,
+                    'limit': charging_schedule_period_limit
+                }
+            ]
             start_response =  call.RemoteStartTransactionPayload(
                     connector_id=1, # Replace with the connector ID you want to use
-                    id_tag=kwargs['id_tag']
+                    id_tag=kwargs['id_tag'],
+                    chargingProfile={
+                        'chargingProfileId': '1',
+                        'transactionId': 1234,
+                        'stackLevel': stack_level,
+                        'chargingProfilePurpose': charging_profile_purpose,
+                        'chargingProfileKind': charging_profile_kind,
+                        'chargingSchedule': charging_schedule,
+                        'recurrencyKind': 0
+                    }
                 )
             
             print("start charge response")
