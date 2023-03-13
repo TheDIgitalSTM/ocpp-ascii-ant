@@ -248,6 +248,7 @@ class ChargePoint(cp):
     @after(Action.Authorize)
     def after_authorize(self,  **kwargs):
         print("After authorize order force start charge")
+        logger.info("=== AFTER AUTH ===")
         charging_profile_purpose = ChargingProfilePurposeType("TxProfile")
         stack_level = 1
         charging_profile_kind = ChargingProfileKindType("Absolute")
